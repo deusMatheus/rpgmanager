@@ -30,8 +30,8 @@ class db_manager:
         self.insert_values('characters',[f"('{self.get_user_id_by_username('akuma')}','Draco','Fighter','Arcane Archer','Dragonborn','1','0','300')"])
         self.insert_values('characters',[f"('{self.get_user_id_by_username('guile')}','Melf','Wizard','Evocation','Elf','5','6500','9000')"])
         self.insert_values('characters',[f"('{self.get_user_id_by_username('ken')}','John','Barbarian','Giant','Human','3','900','3000')"])
-        self.insert_values('campaigns',[f"('Avernus', 'Hell all over the place', 'https://roll20.net/', '{self.get_user_id_by_username('cammy')}','({self.get_user_id_by_username('guile')},{self.get_user_id_by_username('akuma')})',('({self.get_character_id_by_name('Melf')},{self.get_character_id_by_name('Draco')})'),'0','{self.get_magicitem_id_by_name('Bead of Fireballs')}','active')"])
-        self.insert_values('campaigns',[f"('Dragons', 'Dragons for fucks sake', 'https://roll20.net/', '{self.get_user_id_by_username('guile')}','({self.get_user_id_by_username('ken')},{self.get_user_id_by_username('akuma')})',('({self.get_character_id_by_name('John')},{self.get_character_id_by_name('Draco')})'),'0','{self.get_magicitem_id_by_name('Hand of Vecna')}','finished')"])
+        self.insert_values('campaigns',[f"('Avernus', 'Hell all over the place', 'https://roll20.net/', '{self.get_user_id_by_username('cammy')}','{self.get_user_id_by_username('guile')},{self.get_user_id_by_username('akuma')}',('{self.get_character_id_by_name('Melf')},{self.get_character_id_by_name('Draco')}'),'0','{self.get_magicitem_id_by_name('Bead of Fireballs')}','active')"])
+        self.insert_values('campaigns',[f"('Dragons', 'Dragons for fucks sake', 'https://roll20.net/', '{self.get_user_id_by_username('guile')}','{self.get_user_id_by_username('ken')},{self.get_user_id_by_username('akuma')}',('{self.get_character_id_by_name('John')},{self.get_character_id_by_name('Draco')}'),'0','{self.get_magicitem_id_by_name('Hand of Vecna')}','finished')"])
 
     def delete_all(self):
         self.cursor.execute('DROP TABLE characters')
@@ -57,12 +57,18 @@ class db_manager:
         self.test_values()
 
     def check_username(self, informedUsername, informedPassword):
-#        print(self.cursor.execute(f'SELECT username, password FROM users WHERE username = "{informedUsername}" AND password = "{informedPassword}"').fetchall())
         return self.cursor.execute(f'SELECT username, password FROM users WHERE username = "{informedUsername}" AND password = "{informedPassword}"').fetchall()
     
     def get_user_name_by_username(self, informedUsername):
-        return self.cursor.execute(f'SELECT name FROM users WHERE username = "{informedUsername}"').fetchall()[0][0]
+        if(self.cursor.execute(f'SELECT name FROM users WHERE username = "{informedUsername}"').fetchall()):
+            return self.cursor.execute(f'SELECT name FROM users WHERE username = "{informedUsername}"').fetchall()[0][0]
+        return ''
     
+    def get_user_name_by_id(self, informedId):
+        if(self.cursor.execute(f'SELECT name FROM users WHERE rowid = "{informedId}"').fetchall()):
+            return self.cursor.execute(f'SELECT name FROM users WHERE rowid = "{informedId}"').fetchall()[0][0]
+        return ''
+
     def get_user_id_by_username(self, informedUsername):
         if(self.cursor.execute(f'SELECT rowid FROM users WHERE username = "{informedUsername}"').fetchall()):
             return self.cursor.execute(f'SELECT rowid FROM users WHERE username = "{informedUsername}"').fetchall()[0][0]
@@ -72,11 +78,34 @@ class db_manager:
         if(self.cursor.execute(f'SELECT rowid FROM magic_items WHERE name = "{informedName}"').fetchall()):
             return self.cursor.execute(f'SELECT rowid FROM magic_items WHERE name = "{informedName}"').fetchall()[0][0]
         return ''
+    
+    def get_magicitem_name_by_id(self, informedId):
+        if(self.cursor.execute(f'SELECT name FROM magic_items WHERE rowid = "{informedId}"').fetchall()):
+            return self.cursor.execute(f'SELECT name FROM magic_items WHERE rowid = "{informedId}"').fetchall()[0][0]
+        return ''
 
     def get_character_id_by_name(self, informedName):
         if(self.cursor.execute(f'SELECT rowid FROM characters WHERE name = "{informedName}"').fetchall()):
             return self.cursor.execute(f'SELECT rowid FROM characters WHERE name = "{informedName}"').fetchall()[0][0]
         return ''
+
+    def get_character_name_by_id(self, informedId):
+        if(self.cursor.execute(f'SELECT name FROM characters WHERE rowid = "{informedId}"').fetchall()):
+            return self.cursor.execute(f'SELECT name FROM characters WHERE rowid = "{informedId}"').fetchall()[0][0]
+        return ''
+
+    def list_campaigns(self):
+        return self.cursor.execute(f'SELECT * FROM campaigns').fetchall()
+
+    def if_player(self, informedId):
+        if(self.cursor.execute(f'SELECT user_id FROM players WHERE user_id = {informedId}')):
+            return True
+        return False
+    
+    def if_dm(self, informedId):
+        if(self.cursor.execute(f'SELECT user_id FROM dms WHERE user_id = {informedId}')):
+            return True
+        return False
 
 # db_manager().reset_all()
 #db_manager().insert_values('users',[f"('math_user','math_pass', 'math_email','math','dm')"])
@@ -84,3 +113,4 @@ class db_manager:
 #####
 # CRIAR UM MÉTODO QUE PREENCHA TODAS AS TABELAS COM DADOS TESTE. AO REALIZAR O reset_all(), CHAMAR ESTE MÉTODO
 ####
+
