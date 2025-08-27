@@ -23,7 +23,9 @@ with placeholder.form('login', clear_on_submit=True, border=False):
 
         elif(submitButton and Login_manager().checkUser(username, password)):
             st.session_state['login_status'] = True
+            st.session_state['username'] = username
             st.session_state['user'] = Users_manager().get_user_name(username)
+            st.session_state['type'] = Users_manager().get_type(username)
             st.rerun()
 
     else:

@@ -20,16 +20,20 @@ class db_manager:
         self.insert_values('users',[f"('ken','ken','ken@ken','ken','player')"])
         self.insert_values('users',[f"('cammy','cammy','cammy@cammy','cammy','dm')"])
         self.insert_values('users',[f"('guile','guile','guile@guile','guile','player&dm')"])
+        self.insert_values('users',[f"('ryu','ryu','ryu@ryu','ryu','player&dm')"])
         self.insert_values('players',[f"('{self.get_user_id_by_username('akuma')}')"])
         self.insert_values('players',[f"('{self.get_user_id_by_username('guile')}')"])
         self.insert_values('players',[f"('{self.get_user_id_by_username('ken')}')"])
+        self.insert_values('players',[f"('{self.get_user_id_by_username('ryu')}')"])
         self.insert_values('dms',[f"('{self.get_user_id_by_username('guile')}')"])
         self.insert_values('dms',[f"('{self.get_user_id_by_username('cammy')}')"])
+        self.insert_values('dms',[f"('{self.get_user_id_by_username('ryu')}')"])
         self.insert_values('magic_items',[f"('Bead of Fireballs', 'Fireballs!!!!', '50000')"])
         self.insert_values('magic_items',[f"('Hand of Vecna', 'Eugh...', 'Not for sale')"])
         self.insert_values('characters',[f"('{self.get_user_id_by_username('akuma')}','Draco','Fighter','Arcane Archer','Dragonborn','1','0','300')"])
         self.insert_values('characters',[f"('{self.get_user_id_by_username('guile')}','Melf','Wizard','Evocation','Elf','5','6500','9000')"])
         self.insert_values('characters',[f"('{self.get_user_id_by_username('ken')}','John','Barbarian','Giant','Human','3','900','3000')"])
+        self.insert_values('characters',[f"('{self.get_user_id_by_username('akuma')}','Demitri','Warlock','Undead','Human','1','0','300')"])
         self.insert_values('campaigns',[f"('Avernus', 'Hell all over the place', 'https://roll20.net/', '{self.get_user_id_by_username('cammy')}','{self.get_user_id_by_username('guile')},{self.get_user_id_by_username('akuma')}',('{self.get_character_id_by_name('Melf')},{self.get_character_id_by_name('Draco')}'),'0','{self.get_magicitem_id_by_name('Bead of Fireballs')}','active')"])
         self.insert_values('campaigns',[f"('Dragons', 'Dragons for fucks sake', 'https://roll20.net/', '{self.get_user_id_by_username('guile')}','{self.get_user_id_by_username('ken')},{self.get_user_id_by_username('akuma')}',('{self.get_character_id_by_name('John')},{self.get_character_id_by_name('Draco')}'),'0','{self.get_magicitem_id_by_name('Hand of Vecna')}','finished')"])
 
@@ -93,6 +97,14 @@ class db_manager:
         if(self.cursor.execute(f'SELECT name FROM characters WHERE rowid = "{informedId}"').fetchall()):
             return self.cursor.execute(f'SELECT name FROM characters WHERE rowid = "{informedId}"').fetchall()[0][0]
         return ''
+    
+    def get_characters_by_userid(self, informedId):
+        if(self.cursor.execute(f'SELECT * FROM characters WHERE user_id = "{informedId}"').fetchall()):
+            return self.cursor.execute(f'SELECT * FROM characters WHERE user_id = "{informedId}"').fetchall()
+        return ''
+    
+    def get_type_by_username(self, informedUsername):
+        return self.cursor.execute(f'SELECT type FROM users WHERE username = "{informedUsername}"').fetchall()[0][0]
 
     def list_campaigns(self):
         return self.cursor.execute(f'SELECT * FROM campaigns').fetchall()
@@ -107,7 +119,7 @@ class db_manager:
             return True
         return False
 
-# db_manager().reset_all()
+#db_manager().reset_all()
 #db_manager().insert_values('users',[f"('math_user','math_pass', 'math_email','math','dm')"])
 
 #####
