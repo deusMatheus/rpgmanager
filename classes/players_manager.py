@@ -1,3 +1,4 @@
+import streamlit as st
 from classes.db_manager import db_manager as db
 
 class Players_manager:
@@ -29,3 +30,9 @@ class Players_manager:
             }
             listOfCharacters.append(characterDict)
         return listOfCharacters
+    
+    def new_character(self, charName, charOrigin, charClass, charArchetype, charLevel, charExp, charGold):
+        userId = db().get_user_id_by_username(st.session_state['username'])
+        db().insert_values('characters',[f"('{userId}','{charName}','{charClass}','{charArchetype}','{charOrigin}','{charLevel}','{charExp}','{charGold}')"])
+#        self.insert_values('characters',[f"('{self.get_user_id_by_username('akuma')}','Draco','Fighter','Arcane Archer','Dragonborn','1','0','300')"])
+        userId = ''

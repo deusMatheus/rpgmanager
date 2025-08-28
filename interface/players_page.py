@@ -33,10 +33,15 @@ if(st.session_state['new_char']):
         save_character_button = st.form_submit_button(label='Registrar')
 
         if(save_character_button):
-            st.toast(new_char_name)
-            st.session_state['new_char'] = False
-            sleep(2)
-            st.switch_page('interface/players_page.py')
+            if(not new_char_name or not new_char_origin or not new_char_class or not new_char_archetype or not new_char_level or not new_char_xp or not new_char_gold):
+                st.warning('Há campos em branco! Revise antes de registrar o personagem!!')
+            else:
+                st.session_state['new_char'] = False
+                Players_manager().new_character(new_char_name, new_char_origin, new_char_class, new_char_archetype, new_char_level, new_char_xp, new_char_gold)
+                st.toast(f'Personagem {new_char_name} criado com sucesso!')
+                st.toast('Aguarde...')
+                sleep(2)
+                st.switch_page('interface/players_page.py')
 
 if(names):
     tabs = st.tabs(names)

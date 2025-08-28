@@ -1,5 +1,9 @@
 import streamlit as st
+from time import sleep
 from classes.campaigns_manager import Campaigns_manager
+
+if 'new_campaign' not in st.session_state:
+    st.session_state['new_campaign'] = False
 
 st.title('Campanhas')
 campaigns = Campaigns_manager().list_campaigns()
@@ -15,6 +19,34 @@ listString = ''
 for title in fullList:
     listString += title + ', '
 st.write(listString[:-2])
+
+if(st.session_state['type'] == 'dm' or st.session_state['type'] == 'player&dm'):
+    create_campaign_button = st.button('Criar nova campanha')
+else:
+    create_campaign_button = False
+
+if(create_campaign_button):
+    st.session_state['new_campaign'] = True
+
+if(st.session_state['new_campaign']):
+    with st.form('register_new_campaign'):
+        new_campaign_title = st.text_input('Título')
+        new_campaign_description = st.text_area('Descrição')
+        
+        save_campaign_button = st.form_submit_button(label='Registrar campanha')
+
+        if(save_campaign_button):
+            if(not new_campaign_title or not new_campaign_description):
+                st.warning('Há campos em branco! Revise antes de registrar a campanha!!')
+            else:
+                st.session_state['new_campaign'] = False
+                Campaigns_manager().new_campaign(new_campaign_title, new_campaign_description)
+                st.toast(f'Campanha {new_campaign_title} criada com sucesso!')
+                st.toast('Aguarde...')
+                sleep(2)
+                st.switch_page('interface/campaigns_page.py')
+
+
 
 st.subheader('Campanhas que você participa:')
 if(titles):

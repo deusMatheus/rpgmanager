@@ -1,4 +1,4 @@
-import pprint as pp
+import streamlit as st
 from classes.db_manager import db_manager as db
 
 class Campaigns_manager:
@@ -32,3 +32,6 @@ class Campaigns_manager:
             organizedCampaigns.append(campaignsDict)
         return organizedCampaigns
     
+    def new_campaign(self, campaignTitle, campaignDescription):
+        userId = db().get_user_id_by_username(st.session_state['username'])
+        db().insert_values('campaigns',[f"('{campaignTitle}','{campaignDescription}','','{userId}','','','0','','On hold')"])
