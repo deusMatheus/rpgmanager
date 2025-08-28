@@ -78,6 +78,11 @@ class db_manager:
             return self.cursor.execute(f'SELECT rowid FROM users WHERE username = "{informedUsername}"').fetchall()[0][0]
         return ''
     
+    def get_user_id_by_name(self, informedName):
+        if(self.cursor.execute(f'SELECT rowid FROM users WHERE name = "{informedName}"').fetchall()):
+            return self.cursor.execute(f'SELECT rowid FROM users WHERE name = "{informedName}"').fetchall()[0][0]
+        return ''
+
     def get_magicitem_id_by_name(self, informedName):
         if(self.cursor.execute(f'SELECT rowid FROM magic_items WHERE name = "{informedName}"').fetchall()):
             return self.cursor.execute(f'SELECT rowid FROM magic_items WHERE name = "{informedName}"').fetchall()[0][0]
@@ -109,6 +114,9 @@ class db_manager:
     def list_campaigns(self):
         return self.cursor.execute(f'SELECT * FROM campaigns').fetchall()
 
+    def list_players(self):
+        return self.cursor.execute(f'SELECT * FROM players').fetchall()
+
     def if_player(self, informedId):
         if(self.cursor.execute(f'SELECT user_id FROM players WHERE user_id = {informedId}')):
             return True
@@ -118,6 +126,9 @@ class db_manager:
         if(self.cursor.execute(f'SELECT user_id FROM dms WHERE user_id = {informedId}')):
             return True
         return False
+    
+    def add_player_to_campaign(userID, campaign_title):
+        pass #Fazer aqui como no alter_order_status do db_manager.py do Software Feirinha. Pesquisar e pensar com calma o método UPDATE do SQL
 
 #db_manager().reset_all()
 #db_manager().insert_values('users',[f"('math_user','math_pass', 'math_email','math','dm')"])

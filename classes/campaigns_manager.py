@@ -35,3 +35,8 @@ class Campaigns_manager:
     def new_campaign(self, campaignTitle, campaignDescription):
         userId = db().get_user_id_by_username(st.session_state['username'])
         db().insert_values('campaigns',[f"('{campaignTitle}','{campaignDescription}','','{userId}','','','0','','On hold')"])
+        userId = ''
+
+    def add_player(self, player_to_add, campaign_title):
+        userID = db().get_user_id_by_name(player_to_add)
+        db().add_player_to_campaign(userID, campaign_title)

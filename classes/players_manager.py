@@ -36,3 +36,10 @@ class Players_manager:
         db().insert_values('characters',[f"('{userId}','{charName}','{charClass}','{charArchetype}','{charOrigin}','{charLevel}','{charExp}','{charGold}')"])
 #        self.insert_values('characters',[f"('{self.get_user_id_by_username('akuma')}','Draco','Fighter','Arcane Archer','Dragonborn','1','0','300')"])
         userId = ''
+
+    def list_players(self):
+        playersIDs = db().list_players()
+        playersList = []
+        for id in playersIDs:
+            playersList.append(db().get_user_name_by_id(id[0]))
+        return playersList

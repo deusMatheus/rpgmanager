@@ -1,9 +1,16 @@
 import streamlit as st
 from time import sleep
 from classes.campaigns_manager import Campaigns_manager
+from classes.players_manager import Players_manager
 
 if 'new_campaign' not in st.session_state:
     st.session_state['new_campaign'] = False
+
+if 'add_player' not in st.session_state:
+    st.session_state['add_player'] = False
+
+if 'add_select_player' not in st.session_state:
+    st.session_state['add_selected_player'] = False
 
 st.title('Campanhas')
 campaigns = Campaigns_manager().list_campaigns()
@@ -46,8 +53,6 @@ if(st.session_state['new_campaign']):
                 sleep(2)
                 st.switch_page('interface/campaigns_page.py')
 
-
-
 st.subheader('Campanhas que você participa:')
 if(titles):
     tabs = st.tabs(titles)
@@ -64,6 +69,30 @@ if(titles):
                     st.write(f"Posts: {campaigns[j]['posts']}")
                     st.write(f"Itens mágicos: {campaigns[j]['magic_items']}")
                     st.write(f"Status: {campaigns[j]['status']}")
+                    if(campaigns[j]['dm'] == st.session_state['user']):
+                        add_players = st.button('Adicionar jogadores', key=titles[i])
+                        if(add_players):
+                            st.session_state['add_player'] = True
+                        if(st.session_state['add_player']):
+                            players_list = Players_manager().list_players()
+                            selected_player_to_add = st.selectbox('Selecione um jogador', players_list)
+                            if(selected_player_to_add in campaigns[j]['players']):
+                                st.warning('Este jogador já participa desta campanha!')
+                            if(selected_player_to_add in campaigns[j]['dm']):
+                                st.warning('Este é o DM desta campanha!')
+                            else:
+                                add_selected_player = st.button('Adicionar jogador à campanha')
+                                if(add_selected_player and st.session_state['add_selected_player']):
+                                    st.session_state['add_selected_player'] = True
+                            if(st.session_state['add_selected_player']):
+                                st.session_state['add_player'] = False
+                                st.session_state['add_selected_player'] = False
+                                Campaigns_manager().add_player(selected_player_to_add, titles[i])
+                                st.toast(f'Jogador {selected_player_to_add} adicionado à {titles[i]} com sucesso!')
+                                st.toast('Aguarde...')
+                                sleep(2)
+                                st.switch_page('interface/campaigns_page.py')
+
 
 else:
     st.write('Você não está participando de nenhuma campanha.')
