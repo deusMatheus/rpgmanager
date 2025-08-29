@@ -38,5 +38,4 @@ class Campaigns_manager:
         userId = ''
 
     def add_player(self, player_to_add, campaign_title):
-        userID = db().get_user_id_by_name(player_to_add)
-        db().add_player_to_campaign(userID, campaign_title)
+        db().add_player_to_campaign(player_to_add, campaign_title)

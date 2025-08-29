@@ -82,16 +82,16 @@ if(titles):
                                 st.warning('Este é o DM desta campanha!')
                             else:
                                 add_selected_player = st.button('Adicionar jogador à campanha')
-                                if(add_selected_player and st.session_state['add_selected_player']):
+                                if(add_selected_player and not st.session_state['add_selected_player']):
                                     st.session_state['add_selected_player'] = True
-                            if(st.session_state['add_selected_player']):
-                                st.session_state['add_player'] = False
-                                st.session_state['add_selected_player'] = False
-                                Campaigns_manager().add_player(selected_player_to_add, titles[i])
-                                st.toast(f'Jogador {selected_player_to_add} adicionado à {titles[i]} com sucesso!')
-                                st.toast('Aguarde...')
-                                sleep(2)
-                                st.switch_page('interface/campaigns_page.py')
+                                if(st.session_state['add_selected_player']):
+                                    st.session_state['add_player'] = False
+                                    st.session_state['add_selected_player'] = False
+                                    Campaigns_manager().add_player(selected_player_to_add, titles[i])
+                                    st.toast(f'Jogador {selected_player_to_add} adicionado à {titles[i]} com sucesso!')
+                                    st.toast('Aguarde...')
+                                    sleep(2)
+                                    st.switch_page('interface/campaigns_page.py')
 
 
 else:

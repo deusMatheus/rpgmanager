@@ -21,19 +21,23 @@ class db_manager:
         self.insert_values('users',[f"('cammy','cammy','cammy@cammy','cammy','dm')"])
         self.insert_values('users',[f"('guile','guile','guile@guile','guile','player&dm')"])
         self.insert_values('users',[f"('ryu','ryu','ryu@ryu','ryu','player&dm')"])
+        self.insert_values('users',[f"('bison','bison','bison@bison','bison','player&dm')"])
         self.insert_values('players',[f"('{self.get_user_id_by_username('akuma')}')"])
         self.insert_values('players',[f"('{self.get_user_id_by_username('guile')}')"])
         self.insert_values('players',[f"('{self.get_user_id_by_username('ken')}')"])
         self.insert_values('players',[f"('{self.get_user_id_by_username('ryu')}')"])
+        self.insert_values('players',[f"('{self.get_user_id_by_username('bison')}')"])
         self.insert_values('dms',[f"('{self.get_user_id_by_username('guile')}')"])
         self.insert_values('dms',[f"('{self.get_user_id_by_username('cammy')}')"])
         self.insert_values('dms',[f"('{self.get_user_id_by_username('ryu')}')"])
+        self.insert_values('dms',[f"('{self.get_user_id_by_username('bison')}')"])
         self.insert_values('magic_items',[f"('Bead of Fireballs', 'Fireballs!!!!', '50000')"])
         self.insert_values('magic_items',[f"('Hand of Vecna', 'Eugh...', 'Not for sale')"])
         self.insert_values('characters',[f"('{self.get_user_id_by_username('akuma')}','Draco','Fighter','Arcane Archer','Dragonborn','1','0','300')"])
         self.insert_values('characters',[f"('{self.get_user_id_by_username('guile')}','Melf','Wizard','Evocation','Elf','5','6500','9000')"])
         self.insert_values('characters',[f"('{self.get_user_id_by_username('ken')}','John','Barbarian','Giant','Human','3','900','3000')"])
         self.insert_values('characters',[f"('{self.get_user_id_by_username('akuma')}','Demitri','Warlock','Undead','Human','1','0','300')"])
+        self.insert_values('characters',[f"('{self.get_user_id_by_username('bison')}','Shadow','Monk','Shadow','Elf','1','50','350')"])
         self.insert_values('campaigns',[f"('Avernus', 'Hell all over the place', 'https://roll20.net/', '{self.get_user_id_by_username('cammy')}','{self.get_user_id_by_username('guile')},{self.get_user_id_by_username('akuma')}',('{self.get_character_id_by_name('Melf')},{self.get_character_id_by_name('Draco')}'),'0','{self.get_magicitem_id_by_name('Bead of Fireballs')}','active')"])
         self.insert_values('campaigns',[f"('Dragons', 'Dragons for fucks sake', 'https://roll20.net/', '{self.get_user_id_by_username('guile')}','{self.get_user_id_by_username('ken')},{self.get_user_id_by_username('akuma')}',('{self.get_character_id_by_name('John')},{self.get_character_id_by_name('Draco')}'),'0','{self.get_magicitem_id_by_name('Hand of Vecna')}','finished')"])
 
@@ -107,7 +111,10 @@ class db_manager:
         if(self.cursor.execute(f'SELECT * FROM characters WHERE user_id = "{informedId}"').fetchall()):
             return self.cursor.execute(f'SELECT * FROM characters WHERE user_id = "{informedId}"').fetchall()
         return ''
-    
+
+    def get_campaign_id(self, informedCampaign):
+        return self.cursor.execute(f'SELECT rowid FROM campaigns WHERE title = "{informedCampaign}"').fetchall()[0][0]
+
     def get_type_by_username(self, informedUsername):
         return self.cursor.execute(f'SELECT type FROM users WHERE username = "{informedUsername}"').fetchall()[0][0]
 
@@ -127,13 +134,42 @@ class db_manager:
             return True
         return False
     
-    def add_player_to_campaign(userID, campaign_title):
-        pass #Fazer aqui como no alter_order_status do db_manager.py do Software Feirinha. Pesquisar e pensar com calma o método UPDATE do SQL
+    def add_player_to_campaign(self, informedPlayerName,  informedCampaignTitle):
+        userID = self.get_user_id_by_username(informedPlayerName)
+        campaignsID = self.get_campaign_id(informedCampaignTitle)
+        self.cursor.execute(f'UPDATE "campaigns" SET "players_ids" = "{userID}" WHERE rowid = {campaignsID};')
+        self.connection.commit()
+        self.connection.close()
+#        print('hey!')
+        
+#db_manager().add_player_to_campaign('ryu','Principes do Apocalipse')
+#print(db_manager().get_campaign_id('Principes do Apocalipse'))
+
 
 #db_manager().reset_all()
 #db_manager().insert_values('users',[f"('math_user','math_pass', 'math_email','math','dm')"])
+
+################################################################
+    # TESTS V0.3.1 #
+#    def add_player_to_campaign(self, informedPlayerName,  campaign_title): #
+#        ... #
+#        self.connection.close() # 
+#                               #
+#   Agora adiciona jogador à campanha#
+
+
+# UPDATE SQLITE METHOD TESTS #
+# Created a new method def UPDATE_TEST () #
+# Done with a new variable user data, Bison #
+# Done with a new variable character data, Shadow #
+# Done with a new variable campaign data, Princes of the Apocalypse #
+#
+# Future... #
+# DMs can create their own magic items #
+################################################################
 
 #####
 # CRIAR UM MÉTODO QUE PREENCHA TODAS AS TABELAS COM DADOS TESTE. AO REALIZAR O reset_all(), CHAMAR ESTE MÉTODO
 ####
 
+# db_manager().reset_all()
