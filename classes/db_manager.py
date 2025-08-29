@@ -137,11 +137,26 @@ class db_manager:
     def add_player_to_campaign(self, informedPlayerName,  informedCampaignTitle):
         userID = self.get_user_id_by_username(informedPlayerName)
         campaignsID = self.get_campaign_id(informedCampaignTitle)
-        self.cursor.execute(f'UPDATE "campaigns" SET "players_ids" = "{userID}" WHERE rowid = {campaignsID};')
+        if(self.cursor.execute(f'SELECT players_ids FROM campaigns WHERE rowid = {campaignsID}').fetchall()[0][0]):
+            playersIDs = f'{self.cursor.execute(f'SELECT players_ids FROM campaigns WHERE rowid = {campaignsID}').fetchall()[0][0]},{userID}'
+        else:
+            playersIDs = userID
+        self.cursor.execute(f'UPDATE "campaigns" SET "players_ids" = "{playersIDs}" WHERE rowid = {campaignsID};')
         self.connection.commit()
         self.connection.close()
-#        print('hey!')
-        
+
+    def add_char_to_campaign(self, informedCharName, informedCampaignTitle):
+        charId = self.get_character_id_by_name(informedCharName)
+        campaignsID = self.get_campaign_id(informedCampaignTitle)
+        if(self.cursor.execute(f'SELECT characters_ids FROM campaigns WHERE rowid = {campaignsID}').fetchall()[0][0]):
+            charactersIDs = f'{self.cursor.execute(f'SELECT characters_ids FROM campaigns WHERE rowid = {campaignsID}').fetchall()[0][0]},{charId}'
+        else:
+            charactersIDs = charId
+        self.cursor.execute(f'UPDATE "campaigns" SET "characters_ids" = "{charactersIDs}" WHERE rowid = {campaignsID};')
+        self.connection.commit()
+        self.connection.close()
+
+
 #db_manager().add_player_to_campaign('ryu','Principes do Apocalipse')
 #print(db_manager().get_campaign_id('Principes do Apocalipse'))
 

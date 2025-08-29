@@ -43,3 +43,7 @@ class Players_manager:
         for id in playersIDs:
             playersList.append(db().get_user_name_by_id(id[0]))
         return playersList
+    
+    def list_characters(self):
+        playerId = db().get_user_id_by_username(st.session_state['username'])
+        return db().get_characters_by_userid(playerId)

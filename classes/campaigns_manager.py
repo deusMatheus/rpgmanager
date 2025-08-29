@@ -12,8 +12,16 @@ class Campaigns_manager:
 #            magicItems = []
             
             for j in range(len(Campaigns[i][4].split(","))):
-                players.append(db().get_user_name_by_id(Campaigns[i][4].split(",")[j]))
-                characters.append(db().get_character_name_by_id(Campaigns[i][5].split(",")[j]))
+                if(len(Campaigns[i][4])>1):
+                    players.append(db().get_user_name_by_id(Campaigns[i][4].split(",")[j]))
+                else:
+                    players.append(db().get_user_name_by_id(Campaigns[i][4]))
+
+            for j in range(len(Campaigns[i][5].split(","))):
+                if(len(Campaigns[i][5])>1):
+                    characters.append(db().get_character_name_by_id(Campaigns[i][5].split(",")[j]))
+                else:
+                    characters.append(db().get_character_name_by_id(Campaigns[i][5]))
 
 #            for j in range(len(Campaigns[i][7].split(","))):
 #                magicItems.append(db().get_magicitem_name_by_id(Campaigns[i][7].split(","))[j])
@@ -39,3 +47,6 @@ class Campaigns_manager:
 
     def add_player(self, player_to_add, campaign_title):
         db().add_player_to_campaign(player_to_add, campaign_title)
+
+    def add_character(self, char_to_add, campaign_title):
+        db().add_char_to_campaign(char_to_add, campaign_title)

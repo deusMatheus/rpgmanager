@@ -12,6 +12,12 @@ if 'add_player' not in st.session_state:
 if 'add_select_player' not in st.session_state:
     st.session_state['add_selected_player'] = False
 
+if 'add_character' not in st.session_state:
+    st.session_state['add_character'] = False
+
+if 'add_selected_character' not in st.session_state:
+    st.session_state['add_selected_character'] = False
+
 st.title('Campanhas')
 campaigns = Campaigns_manager().list_campaigns()
 titles = []
@@ -69,13 +75,38 @@ if(titles):
                     st.write(f"Posts: {campaigns[j]['posts']}")
                     st.write(f"Itens mágicos: {campaigns[j]['magic_items']}")
                     st.write(f"Status: {campaigns[j]['status']}")
+                    if(st.session_state['type'] == 'player' or st.session_state['type'] == 'player&dm'):
+                        add_character = st.button('Adicionar personagem', key=f'add_char_to_{campaigns[j]['title']}')
+                        if(add_character):
+                            st.session_state['add_character'] = True
+                        if(st.session_state['add_character']):
+                            full_characters_list = Players_manager().list_characters()
+                            characters_names_list = []
+                            for character in full_characters_list:
+                                characters_names_list.append(character[1])
+                            selected_char_to_add = st.selectbox('Selecione um personagem', characters_names_list, key=F'char_to_{campaigns[j]['title']}')
+                            if(selected_char_to_add in campaigns[j]['characters']):
+                                st.warning('Este personagem já participa desta campanha!')
+                            else:
+                                add_selected_char = st.button(f'Adicionar {selected_char_to_add} à {campaigns[j]['title']}')
+                                if(add_selected_char and not st.session_state['add_selected_character']):
+                                    st.session_state['add_selected_character'] = True
+                                if(st.session_state['add_selected_character']):
+                                    st.session_state['add_character'] = False
+                                    st.session_state['add_selected_character'] = False
+                                    Campaigns_manager().add_character(selected_char_to_add, campaigns[j]['title'])
+                                    st.toast(f'Personagem {selected_char_to_add} adicionado à {titles[i]} com sucesso!')
+                                    st.toast('Aguarde...')
+                                    sleep(2)
+                                    st.switch_page('interface/campaigns_page.py')
+
                     if(campaigns[j]['dm'] == st.session_state['user']):
-                        add_players = st.button('Adicionar jogadores', key=titles[i])
+                        add_players = st.button('Adicionar jogador', key=titles[i])
                         if(add_players):
                             st.session_state['add_player'] = True
                         if(st.session_state['add_player']):
                             players_list = Players_manager().list_players()
-                            selected_player_to_add = st.selectbox('Selecione um jogador', players_list)
+                            selected_player_to_add = st.selectbox('Selecione um jogador', players_list, key='player_to_add')
                             if(selected_player_to_add in campaigns[j]['players']):
                                 st.warning('Este jogador já participa desta campanha!')
                             if(selected_player_to_add in campaigns[j]['dm']):
