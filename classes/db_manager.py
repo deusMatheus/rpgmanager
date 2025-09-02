@@ -40,6 +40,7 @@ class db_manager:
         self.insert_values('characters',[f"('{self.get_user_id_by_username('bison')}','Shadow','Monk','Shadow','Elf','1','50','350')"])
         self.insert_values('campaigns',[f"('Avernus', 'Hell all over the place', 'https://roll20.net/', '{self.get_user_id_by_username('cammy')}','{self.get_user_id_by_username('guile')},{self.get_user_id_by_username('akuma')}',('{self.get_character_id_by_name('Melf')},{self.get_character_id_by_name('Draco')}'),'0','{self.get_magicitem_id_by_name('Bead of Fireballs')}','active')"])
         self.insert_values('campaigns',[f"('Dragons', 'Dragons for fucks sake', 'https://roll20.net/', '{self.get_user_id_by_username('guile')}','{self.get_user_id_by_username('ken')},{self.get_user_id_by_username('akuma')}',('{self.get_character_id_by_name('John')},{self.get_character_id_by_name('Draco')}'),'0','{self.get_magicitem_id_by_name('Hand of Vecna')}','finished')"])
+        self.insert_values('email',[f"('rpgmanagertest@gmail.com','fbtoubmqtzwkrgvv')"])
 
     def delete_all(self):
         self.cursor.execute('DROP TABLE characters')
@@ -49,6 +50,7 @@ class db_manager:
         self.cursor.execute('DROP TABLE users')
         self.cursor.execute('DROP TABLE posts')
         self.cursor.execute('DROP TABLE campaigns')
+        self.cursor.execute('DROP TABLE email')
         self.cursor.execute('DROP TABLE log')
         self.connection.commit()
 
@@ -61,8 +63,15 @@ class db_manager:
         self.create_table('users','(username, password, email, name, type)')
         self.create_table('posts','(user_ID, campaign_ID, subject, message, created_at)')
         self.create_table('campaigns','(title, description, game_link, dm_ID, players_IDs, characters_IDs, posts_IDs, magic_items_IDs, current_status)')
+        self.create_table('email','(address, password)')
         self.create_table('log','(date, time, table_name, user_id, operation_description)')
         self.test_values()
+
+    def get_email(self):
+        return self.cursor.execute(f'SELECT address FROM email').fetchall()[0][0]
+
+    def get_email_password(self):
+        return self.cursor.execute(f'SELECT password FROM email').fetchall()[0][0]
 
     def check_username(self, informedUsername, informedPassword):
         return self.cursor.execute(f'SELECT username, password FROM users WHERE username = "{informedUsername}" AND password = "{informedPassword}"').fetchall()
