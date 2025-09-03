@@ -52,6 +52,7 @@ class db_manager:
         self.cursor.execute('DROP TABLE campaigns')
         self.cursor.execute('DROP TABLE email')
         self.cursor.execute('DROP TABLE log')
+        self.cursor.execute('DROP TABLE temp')
         self.connection.commit()
 
     def reset_all(self):
@@ -65,17 +66,28 @@ class db_manager:
         self.create_table('campaigns','(title, description, game_link, dm_ID, players_IDs, characters_IDs, posts_IDs, magic_items_IDs, current_status)')
         self.create_table('email','(address, password)')
         self.create_table('log','(date, time, table_name, user_id, operation_description)')
-        self.test_values()
+        self.create_table('temp','(username, otp, status)')
+        self.insert_values('email',[f"('rpgmanagertest@gmail.com','fbtoubmqtzwkrgvv')"])
+#        self.test_values()
 
     def get_email(self):
-        return self.cursor.execute(f'SELECT address FROM email').fetchall()[0][0]
-
-    def get_email_password(self):
-        return self.cursor.execute(f'SELECT password FROM email').fetchall()[0][0]
-
-    def check_username(self, informedUsername, informedPassword):
-        return self.cursor.execute(f'SELECT username, password FROM users WHERE username = "{informedUsername}" AND password = "{informedPassword}"').fetchall()
+        if(self.cursor.execute(f'SELECT address FROM email').fetchall()):
+            return self.cursor.execute(f'SELECT address FROM email').fetchall()[0][0]
+        return ''
     
+    def get_email_password(self):
+        if(self.cursor.execute(f'SELECT password FROM email').fetchall()):
+            return self.cursor.execute(f'SELECT password FROM email').fetchall()[0][0]
+        return ''
+    
+    def check_username(self, informedUsername, informedPassword):
+        if(self.cursor.execute(f'SELECT username, password FROM users WHERE username = "{informedUsername}" AND password = "{informedPassword}"').fetchall()):
+            return self.cursor.execute(f'SELECT username, password FROM users WHERE username = "{informedUsername}" AND password = "{informedPassword}"').fetchall()
+        return ''
+    
+    def list_usernames(self):
+        return self.cursor.execute(f'SELECT username FROM users').fetchall()
+
     def get_user_name_by_username(self, informedUsername):
         if(self.cursor.execute(f'SELECT name FROM users WHERE username = "{informedUsername}"').fetchall()):
             return self.cursor.execute(f'SELECT name FROM users WHERE username = "{informedUsername}"').fetchall()[0][0]
@@ -165,10 +177,20 @@ class db_manager:
         self.connection.commit()
         self.connection.close()
 
+    def check_otp(self, informedUsername, informedOTP):
+        listOfOTPs = self.cursor.execute(f'SELECT otp FROM temp WHERE username = "{informedUsername}" AND status = "active"').fetchall()
+        trueList = []
+        for otp in listOfOTPs:
+            trueList.append(otp[0])
+        if informedOTP in trueList:
+            return True
+        return False
+    
+    def register_new_user(self, informedUsername, informedPass, informedEmail, informedName):
+        self.insert_values('users',[f"('{informedUsername}','{informedPass}','{informedEmail}','{informedName}','player&dm')"])
 
 #db_manager().add_player_to_campaign('ryu','Principes do Apocalipse')
 #print(db_manager().get_campaign_id('Principes do Apocalipse'))
-
 
 #db_manager().reset_all()
 #db_manager().insert_values('users',[f"('math_user','math_pass', 'math_email','math','dm')"])

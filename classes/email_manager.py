@@ -1,5 +1,5 @@
 from email.message import EmailMessage
-from db_manager import db_manager as db
+from classes.db_manager import db_manager as db
 from numpy import random
 import ssl
 import smtplib
@@ -33,9 +33,12 @@ class Email:
             one_time_password += f'{random.randint(9)}'
         return one_time_password
 
-to_email = 'matheus.pgua94@gmail.com'
-subject = 'Código de acesso único'
+    def register_new_user(self, informedUsername, informedPassword, informedEmail):
+        pass
 
-body = f'Seu código de acesso único é: {Email().generate_one_time_password()}'
-
-Email().send_email(to_email, subject, body)
+#to_email = 'matheus.pgua94@gmail.com'
+#subject = 'Código de acesso único'
+#
+#body = f'Seu código de acesso único é: {Email().generate_one_time_password()}'
+#
+#Email().send_email(to_email, subject, body)

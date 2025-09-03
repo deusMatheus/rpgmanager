@@ -31,3 +31,8 @@ with placeholder.form('login', clear_on_submit=True, border=False):
     else:
         st.write('Retorne à página inicial.')
         st.switch_page('interface/main_page.py')
+
+registerButton = st.button('Cadastrar novo usuário')
+if(registerButton):
+    st.toast('Aguarde...')
+    st.switch_page('interface/register.py')

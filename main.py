@@ -15,7 +15,11 @@ if 'type' not in st.session_state:
 def main():
 
     if(not st.session_state['login_status']):
-        pages = [st.Page('interface/login_page.py',title='Login')]
+        pages = [
+            st.Page('interface/login_page.py',title='Login'),
+            st.Page('interface/register.py', title='Registrar usuário')
+            ]
+        pg = st.navigation(pages, position='hidden')
 
     if(st.session_state['login_status']):
         st.markdown(f"""
@@ -40,7 +44,7 @@ def main():
             pages = [st.Page('interface/main_page.py', title='Página principal'),
                     st.Page('interface/campaigns_page.py', title='Campanhas')]
 
-    pg = st.navigation(pages)
+        pg = st.navigation(pages)
     pg.run()
 
 if __name__ == '__main__':
