@@ -188,6 +188,8 @@ class db_manager:
     
     def register_new_user(self, informedUsername, informedPass, informedEmail, informedName):
         self.insert_values('users',[f"('{informedUsername}','{informedPass}','{informedEmail}','{informedName}','player&dm')"])
+        self.insert_values('players',[f"('{self.get_user_id_by_username(informedUsername)}')"])
+        self.insert_values('dms',[f"('{self.get_user_id_by_username(informedUsername)}')"])
 
 #db_manager().add_player_to_campaign('ryu','Principes do Apocalipse')
 #print(db_manager().get_campaign_id('Principes do Apocalipse'))
