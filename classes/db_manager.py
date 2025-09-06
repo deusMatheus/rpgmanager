@@ -68,7 +68,8 @@ class db_manager:
         self.create_table('log','(date, time, table_name, user_id, operation_description)')
         self.create_table('temp','(username, otp, status)')
         self.insert_values('email',[f"('rpgmanagertest@gmail.com','fbtoubmqtzwkrgvv')"])
-        self.test_values()
+        self.insert_values('users',[f"('DrMaximoff','3@141592#Mm','matheus.pgua94@gmail.com','Matheus','player&dm')"])
+#        self.test_values()
 
     def get_email(self):
         if(self.cursor.execute(f'SELECT address FROM email').fetchall()):

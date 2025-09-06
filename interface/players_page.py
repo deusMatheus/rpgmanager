@@ -40,7 +40,7 @@ if(st.session_state['new_char']):
                 Players_manager().new_character(new_char_name, new_char_origin, new_char_class, new_char_archetype, new_char_level, new_char_xp, new_char_gold)
                 st.toast(f'Personagem {new_char_name} criado com sucesso!')
                 st.toast('Aguarde...')
-                sleep(2)
+                sleep(5)
                 st.switch_page('interface/players_page.py')
 
 if(names):
