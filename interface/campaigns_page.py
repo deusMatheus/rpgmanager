@@ -109,8 +109,8 @@ if(titles):
                             selected_player_to_add = st.selectbox('Selecione um jogador', players_list, key='player_to_add')
                             if(selected_player_to_add in campaigns[j]['players']):
                                 st.warning('Este jogador já participa desta campanha!')
-                            if(selected_player_to_add in campaigns[j]['dm']):
-                                st.warning('Este é o DM desta campanha!')
+#                            if(selected_player_to_add in campaigns[j]['dm']):
+#                                st.warning('Este é o DM desta campanha!')
                             else:
                                 add_selected_player = st.button('Adicionar jogador à campanha')
                                 if(add_selected_player and not st.session_state['add_selected_player']):
