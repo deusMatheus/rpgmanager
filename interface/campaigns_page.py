@@ -106,6 +106,7 @@ if(titles):
                             st.session_state['add_player'] = True
                         if(st.session_state['add_player']):
                             players_list = Players_manager().list_players()
+                            print(players_list)
                             selected_player_to_add = st.selectbox('Selecione um jogador', players_list, key='player_to_add')
                             if(selected_player_to_add in campaigns[j]['players']):
                                 st.warning('Este jogador já participa desta campanha!')
