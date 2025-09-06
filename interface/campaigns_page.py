@@ -119,9 +119,9 @@ if(titles):
                                     Campaigns_manager().add_player(selected_player_to_add, titles[i])
                                     st.toast(f'Jogador {selected_player_to_add} adicionado à {titles[i]} com sucesso!')
                                     st.toast('Aguarde...')
-                                    sleep(5)
                                     st.session_state['add_player'] = False
                                     st.session_state['add_selected_player'] = False
+                                    sleep(5)
                                     st.switch_page('interface/campaigns_page.py')
 
 
