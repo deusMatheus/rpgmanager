@@ -30,20 +30,22 @@ def main():
         """, unsafe_allow_html=True)
 #        st.write(st.session_state['type'])
 #        print(st.session_state['type'])
-        if(st.session_state['type'] == 'player'):
-            pages = [st.Page('interface/main_page.py', title='Página principal'),
-                     st.Page('interface/campaigns_page.py', title='Campanhas'),
-                     st.Page('interface/players_page.py', title='Página do jogador')]
+#        if(st.session_state['type'] == 'player'):
+#            pages = [st.Page('interface/main_page.py', title='Página principal'),
+#                     st.Page('interface/campaigns_page.py', title='Campanhas'),
+#                     st.Page('interface/players_page.py', title='Página do jogador')]
 
-        elif(st.session_state['type'] == 'player&dm'):
-            pages = [st.Page('interface/main_page.py', title='Página principal'),
-                     st.Page('interface/campaigns_page.py', title='Campanhas'),
-                     st.Page('interface/players_page.py', title='Página do jogador')]
-
-        else:
-            pages = [st.Page('interface/main_page.py', title='Página principal'),
-                    st.Page('interface/campaigns_page.py', title='Campanhas')]
-
+#        elif(st.session_state['type'] == 'player&dm'):
+#            pages = [st.Page('interface/main_page.py', title='Página principal'),
+#                     st.Page('interface/campaigns_page.py', title='Campanhas'),
+#                     st.Page('interface/players_page.py', title='Página do jogador')]
+#
+#        else:
+#            pages = [st.Page('interface/main_page.py', title='Página principal'),
+#                    st.Page('interface/campaigns_page.py', title='Campanhas')]
+#
+        pages = [st.Page('interface/main_page.py', title='Página principal'),
+                     st.Page('interface/campaigns_page.py', title='Campanhas')]
         pg = st.navigation(pages)
     pg.run()
 

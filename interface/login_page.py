@@ -10,6 +10,7 @@ with placeholder.form('login', clear_on_submit=True, border=False):
         st.markdown(f"""
             <div style='margin-left: 1.15em; margin-top:1em;'>
                 <h1>Login page</h1>
+                <p>V 0.6</p>
             </div>
         """, unsafe_allow_html=True)
 
